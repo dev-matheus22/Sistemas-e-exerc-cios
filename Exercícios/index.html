@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercícios hora de codar</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <style>
+        body{
+            padding: 20px;
+        }
+
+        /* div{
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            transition: all 2s;
+        }
+        .circulo{
+            background-color: yellow;
+            border-radius: 50%;
+            transform:rotate(720deg)
+        } */
+
+        #texto{
+            border: 1px solid black;
+            padding: 10px;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            // $('button').click(function(){
+            //     $('div').toggleClass('circulo')
+            // });
+
+        //     $('#btn1').click(function(){
+        //         $.ajax({
+        //             url:"texto.txt",
+        //             success: sucesso,
+        //             error: erro
+        //         });
+        //     });
+
+        //     $('#btn2').click(function(){
+        //         $.ajax({
+        //             url: "texto2.txt",
+        //            success: sucesso,
+        //            error: erro
+        //         });
+        //     });
+        //             function sucesso (result) {
+        //                 $('#texto').html(result)
+        //                 $("#resultado").text('Texto carregado');
+        //             }
+        //             function erro(result) {
+        //                 $('#texto').html('')
+        //                 $("#resultado").text("Arquivo não encontrado!");
+        //             }
+         })
+
+    </script>
+</head>
+<body>
+    <div></div>
+    <br>
+    <button>Transforma</button>
+
+    <div id="texto">Texto temporário...</div>
+    <p id="resultado">Pressionar um botão para carregar o arquivo</p>
+
+    <button id="btn1">Carrega arquivo interno</button>
+    <button id="btn2">Carrega arquivo inexistente</button>
+
+    <script>
+        if(typeof(Storage) !== "undefined"){
+            localStorage.setItem('produto', 'camisas');
+            localStorage.setItem('quantidade', 5);
+            localStorage['quantidade'] = 2;
+            document.write('Código executado!');
+        } else {
+            document.write('O objeto storage não existe')
+        }
+
+    </script>
+</body>
+</html>

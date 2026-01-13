@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alguma coisa</title>
+</head>
+<body>
+    <form action="">
+        <label for="">Deletar</label>
+        <input type="number" id="">
+    </form>
+
+    <script>
+        let quantidade = Number(prompt("Quantos números você quer?"))
+        let array = [];
+
+        for(let i = 0; i < quantidade; i++){
+        array.push(Number(prompt(`Digite o número ${i + 1}`)))
+        }
+
+        let sorteio = Math.floor(Math.random() * array.length);
+        let numeroSorteado = array[sorteio];
+
+        document.write(`O número sorteado foi: ${numeroSorteado}`);
+    </script>
+</body>
+</html>

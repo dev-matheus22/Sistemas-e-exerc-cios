@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Gerenciador de Tarefas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Variáveis de Cores --- */
+        :root {
+            --primary: #AD660A; /* Laranja/Marrom Principal */
+            --primary-light: #C57D20;
+            --primary-dark: #8A4A0A;
+
+            --background: #FFF8F0; /* Fundo Bege Claro */
+            --gray-light: #F3EDE7; /* Fundo do Card */
+            --gray: #B8B2AD; /* Borda/Separador */
+            --gray-dark: #3A322C;
+
+            --text-main: #2A241F; /* Texto Principal Escuro */
+            --text-on-primary: #FFF9F2; /* Texto sobre o Primário */
+
+            --success: #4CAF50;
+            --danger: #D64532;
+            --warning: #E8A22F;
+            --shadow: rgba(0, 0, 0, 0.15);
+        }
+
+        /* --- Estilos Globais e Layout da Página --- */
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: var(--background);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-main);
+            /* Centraliza o container vertical e horizontalmente */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Container Principal (Card de Login) --- */
+        .container {
+            width: 90%;
+            max-width: 400px; /* Limita a largura máxima */
+            padding: 40px;
+            background-color: var(--gray-light);
+            border-radius: 10px;
+            box-shadow: 0 10px 20px var(--shadow);
+            text-align: center;
+        }
+
+        /* Título */
+        .container p {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 30px;
+        }
+
+        /* Formulário */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        /* Inputs */
+        input[type="text"], input[type="password"] {
+            padding: 12px 15px;
+            border: 1px solid var(--gray);
+            border-radius: 6px;
+            font-size: 1em;
+            width: 90%;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(173, 102, 10, 0.2);
+            outline: none;
+        }
+
+        /* Botão de Login */
+        button {
+            background-color: var(--primary);
+            color: var(--text-on-primary);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            width: 98%;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Link de Cadastro */
+        .container a {
+            display: block;
+            margin-top: 20px;
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .container a:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p>Acesse suas Tarefas</p>
+        <form onsubmit="event.preventDefault(); login()">
+            <input type="text" id="email" placeholder="Insira seu e-mail" required>
+            <input type="password" id="password" placeholder="Insira sua senha" required>
+            <button type="submit">Login</button>
+        </form>
+        <a href="cadastro.html">Cadastre-se aqui</a>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteio de amigo secreto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variáveis de Cores */
+        :root{
+            --primary: #C0392B; /* Vermelho Escuro / Principal (Botão) */
+            --secondary: #27ae60; /* Verde (Sucesso) */
+            --destaques: #F1C40F; /* Amarelo (Avisos/Destaques) */
+            --background: #ECF0F1; /* Cinza Claro (Fundo) */
+            --text: #2C3E50; /* Cinza Escuro (Texto) */
+            --card-bg: #FFFFFF; /* Branco Puro (Cartões/Conteúdo) */
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos Globais e Reset Básico */
+        body{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: var(--background);
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Cabeçalho */
+        header{
+            background-color: var(--primary);
+            color: var(--card-bg);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: 700;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        /* Container Principal */
+        .container{
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        /* Formulário e Input */
+        form{
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #nome{
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 2px solid #BDC3C7;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        #nome:focus{
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        /* Estilo dos Botões */
+        button{
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        /* Botão Cadastrar (submit) */
+        form button[type="submit"]{
+            background-color: var(--primary);
+            color: var(--card-bg);
+        }
+
+        form button[type="submit"]:hover{
+            background-color: #A93226; /* Um pouco mais escuro */
+        }
+        
+        /* Botão Sortear */
+        .container > button:nth-child(3){ 
+            background-color: var(--secondary);
+            color: var(--card-bg);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .container > button:nth-child(3):hover{
+            background-color: #2ECC71; /* Um pouco mais claro */
+            transform: translateY(-1px);
+        }
+        
+        /* Lista de Participantes */
+        #lista{
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            border-top: 1px solid #ECF0F1;
+        }
+
+        .lista-elemento-item{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #ECF0F1;
+            background-color: var(--card-bg);
+            font-size: 1.1em;
+        }
+
+        .lista-elemento-item:nth-child(odd){
+             background-color: #F7F9F9; /* Fundo levemente diferente para linhas alternadas */
+        }
+
+        .btn{
+            background-color: var(--primary);
+            color: var(--card-bg);
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        .btn:hover{
+            background-color: #A93226;
+        }
+        
+        /* Container de Resultados */
+        #container-resultado{
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            border: 2px dashed var(--destaques);
+            background-color: #FEF9E7; /* Fundo para destaque */
+            border-radius: 8px;
+        }
+
+        .lista-sorteado{
+            list-style: none;
+            padding: 10px 0;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 1px dotted #D6DBDF;
+        }
+
+        .lista-sorteado:last-child{
+            border-bottom: none;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        Sorteio de Amigo Secreto
+    </header>
+
+    <div class="container">
+        <form onsubmit="event.preventDefault(); addParticipantes()">
+            <input type="text" id="nome" name="nome" placeholder="Insira o nome do participante">
+            <button type="submit">Cadastrar</button>
+        </form>
+        
+        <button onclick="sortear()">Sortear Amigo</button>
+        <button onclick="resetar()" style="background-color: #95A5A6; margin-top: 10px;">Resetar Lista</button>
+    </div>
+
+    <div class="container" style="margin-top: 20px;">
+        <h3>Lista de Participantes</h3>
+        <ul id="lista">
+            </ul>
+    </div>
+    
+    <div id="container-resultado">
+        <p style="text-align: center; color: #7F8C8D;">O resultado do sorteio aparecerá aqui.</p>
+    </div>
+    
+    <script src="index.js"></script>
+</body>
+</html>
