@@ -9,58 +9,32 @@ if (dadosSalvos !== null) {
 
 }
 
+const validarRegistro = (objEmValidacao) => {
+    if (!objEmValidacao.valor || isNaN(Number(objEmValidacao.valor))) return "Valor inválido";
+    if (!objEmValidacao.categoria) return "Categoria inválida";
+    if (!objEmValidacao.descricao) return "Descrição inválida";
+    if (!objEmValidacao.data) return "Data inválida";
+    if (objEmValidacao.tipo !== "entrada" && objEmValidacao.tipo !== "despesa") return "Tipo inválido";
+    return null;
+}
+
 const addRegistro = () => {
-    let valor = document.getElementById("valor").value.trim()
-    let descricao = document.getElementById("descricao").value.trim()
-    let categoria = document.getElementById("categoria").value.trim()
-    let tipo = document.getElementById("tipo").value
-    let data = document.getElementById("data").value
-
-    if (valor === "") {
-        alert("Insira um valor válido")
+    const objInput = dadosInput()
+    const erro = validarRegistro(objInput)
+    if (erro) {
+        alert(erro)
         return
     }
 
-    let numero = Number(valor)
-
-    if (isNaN(numero)) {
-        alert("Insira um número válido")
-        return
-    }
-
-    if (categoria === "") {
-        alert("Insira uma categoria")
-        return
-    }
-
-    if (descricao === "") {
-        alert("Insira uma descrição válido")
-        return
-    }
-
-    if (data === "") {
-        alert("Insira uma data válida")
-        return;
-    }
-
-    if (tipo !== "entrada" && tipo !== "despesa") {
-        alert("Insira um tipo válido")
-        return
-    }
-
-    let randomId = Date.now()
-    let lancamentoObj = {
-        id: randomId,
-        tipo: tipo,
-        valor: numero,
-        categoria: categoria,
-        descricao: descricao,
-        data: data
-    }
+    const lancamentoObj = { ...objInput, id: Date.now(), valor: objInput.valor }
 
     lancamentos.push(lancamentoObj)
 
     localStorage.setItem("lancamentos", JSON.stringify(lancamentos))
+
+    mostrarLista()
+    mostrarTela("lista")
+
 }
 
 const editRegistro = (id) => {
@@ -77,46 +51,42 @@ const editRegistro = (id) => {
     }
 }
 
-const salvarRegistroEditado = () => {
-    let valor = document.getElementById("valor").value.trim()
+const dadosInput = () => {
+    let valor = Number(document.getElementById("valor").value.trim())
     let descricao = document.getElementById("descricao").value.trim()
     let categoria = document.getElementById("categoria").value.trim()
-    let tipo = document.getElementById("tipo").value
+    let tipo = document.getElementById("tipo").value.trim().toLowerCase()
     let data = document.getElementById("data").value
-    if (valor === "") {
-        alert("Insira um valor válido")
+
+    const objInput = {
+        valor: valor,
+        descricao: descricao,
+        categoria: categoria,
+        tipo: tipo,
+        data: data
+    }
+
+    return objInput;
+}
+
+const salvarRegistroEditado = () => {
+    const objInput = dadosInput()
+    const erro = validarRegistro(objInput)
+
+    if (erro) {
+        alert(erro)
         return
     }
-    let numero = Number(valor)
-    if (isNaN(numero)) {
-        alert("Insira um número válido")
-        return
-    }
-    if (categoria === "") {
-        alert("Insira uma categoria")
-        return
-    }
-    if (descricao === "") {
-        alert("Insira uma descrição válido")
-        return
-    }
-    if (data === "") {
-        alert("Insira uma data válida")
-        return;
-    }
-    if (tipo !== "entrada" && tipo !== "despesa") {
-        alert("Insira um tipo válido")
-        return
-    }
+
     for (const item of lancamentos) {
         if (item.id === idEmEdicao) {
-            item.valor = numero
-            item.descricao = descricao
-            item.categoria = categoria
-            item.tipo = tipo
-            item.data = data
+            item.valor = objInput.valor
+            item.descricao = objInput.descricao
+            item.categoria = objInput.categoria
+            item.tipo = objInput.tipo
+            item.data = objInput.data
             break;
-        }   
+        }
     }
     localStorage.setItem("lancamentos", JSON.stringify(lancamentos))
     idEmEdicao = null
@@ -164,7 +134,7 @@ const mostrarLista = () => {
             let spanValor = document.createElement("span")
             let editButton = document.createElement("button")
             let removeButton = document.createElement("button")
-            
+
             // Criar container para os botões para melhor layout
             let buttonContainer = document.createElement("div");
             buttonContainer.classList.add("card-buttons"); // Nova classe para estilizar no CSS
@@ -176,14 +146,14 @@ const mostrarLista = () => {
             removeButton.addEventListener("click", () => deleteRegistro(lancamento.id))
 
             card.classList.add("full-card")
-            
+
             // AQUI: ADICIONANDO CLASSE PARA DISTINÇÃO VISUAL (Entrada/Despesa)
             if (lancamento.tipo === 'entrada') {
                 card.classList.add('entrada-card');
             } else if (lancamento.tipo === 'despesa') {
                 card.classList.add('despesa-card');
             }
-            
+
             spanData.classList.add("data-format")
             spanCatTip.classList.add("categoria-tipo-format")
             spanDescricao.classList.add("descricao-format")
@@ -200,7 +170,7 @@ const mostrarLista = () => {
             card.appendChild(spanDescricao)
             card.appendChild(spanCatTip)
             card.appendChild(spanValor)
-            
+
             // Adicionar botões ao container e o container ao card
             buttonContainer.appendChild(editButton)
             buttonContainer.appendChild(removeButton)
@@ -240,8 +210,8 @@ const carregarDashboard = () => {
     let saldo = totalEntrada - totalDespesa
     let percentual = 0
 
-    if (totalEntrada > 0){
-       percentual = (totalDespesa / totalEntrada) * 100;
+    if (totalEntrada > 0) {
+        percentual = (totalDespesa / totalEntrada) * 100;
     } else {
         percentual = 0;
     }
