@@ -18,39 +18,6 @@ const validarRegistro = (objEmValidacao) => {
     return null;
 }
 
-const addRegistro = () => {
-    const objInput = dadosInput()
-    const erro = validarRegistro(objInput)
-    if (erro) {
-        alert(erro)
-        return
-    }
-
-    const lancamentoObj = { ...objInput, id: Date.now(), valor: objInput.valor }
-
-    lancamentos.push(lancamentoObj)
-
-    localStorage.setItem("lancamentos", JSON.stringify(lancamentos))
-
-    mostrarLista()
-    mostrarTela("lista")
-
-}
-
-const editRegistro = (id) => {
-    for (const item of lancamentos) {
-        if (item.id === id) {
-            idEmEdicao = id
-            document.getElementById("valor").value = item.valor
-            document.getElementById("descricao").value = item.descricao
-            document.getElementById("categoria").value = item.categoria
-            document.getElementById("tipo").value = item.tipo
-            document.getElementById("data").value = item.data
-            mostrarTela("editar")
-        }
-    }
-}
-
 const dadosInput = () => {
     let valor = Number(document.getElementById("valor").value.trim())
     let descricao = document.getElementById("descricao").value.trim()
@@ -69,34 +36,71 @@ const dadosInput = () => {
     return objInput;
 }
 
-const salvarRegistroEditado = () => {
+const salvarLancamentos = () => {
     const objInput = dadosInput()
-    const erro = validarRegistro(objInput)
+    salvarRegistro(objInput, idEmEdicao)
+    limparFormulario()
+}
 
-    if (erro) {
-        alert(erro)
-        return
-    }
+const atualizarStorage = () => {
+    localStorage.setItem("lancamentos", JSON.stringify(lancamentos))
+}
 
+
+const limparFormulario = () => {
+    document.getElementById("valor").value = ""
+    document.getElementById("descricao").value = ""
+    document.getElementById("categoria").value = ""
+    document.getElementById("tipo").value = "entrada"
+    document.getElementById("data").value = ""
+}
+
+
+
+const editRegistro = (id) => {
     for (const item of lancamentos) {
-        if (item.id === idEmEdicao) {
-            item.valor = objInput.valor
-            item.descricao = objInput.descricao
-            item.categoria = objInput.categoria
-            item.tipo = objInput.tipo
-            item.data = objInput.data
-            break;
+        if (item.id === id) {
+            idEmEdicao = id
+            document.getElementById("valor").value = item.valor
+            document.getElementById("descricao").value = item.descricao
+            document.getElementById("categoria").value = item.categoria
+            document.getElementById("tipo").value = item.tipo
+            document.getElementById("data").value = item.data
+            mostrarTela("editar")
         }
     }
-    localStorage.setItem("lancamentos", JSON.stringify(lancamentos))
-    idEmEdicao = null
-    mostrarTela("lista")
-    mostrarLista();
 }
+
+
+
+const salvarRegistro = (objInput, id = null) => {
+    const erro = validarRegistro(objInput)
+    if (erro) {
+        alert(erro)
+        return false
+    }
+
+    if (id === null) {
+        // Novo registro
+        objInput.id = Date.now()
+        lancamentos.push(objInput)
+    } else {
+        // Edição
+        const index = lancamentos.findIndex(item => item.id === id)
+        if (index >= 0) lancamentos[index] = { ...objInput, id }
+        idEmEdicao = null
+    }
+
+    atualizarStorage()
+    mostrarLista()
+    mostrarTela("lista")
+    return true
+}
+
 
 const deleteRegistro = (id) => {
     lancamentos = lancamentos.filter(itemQueResta => itemQueResta.id !== id)
-    localStorage.setItem("lancamentos", JSON.stringify(lancamentos));
+    atualizarStorage()
     mostrarLista();
 }
 
