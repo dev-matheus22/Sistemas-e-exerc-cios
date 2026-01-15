@@ -38,8 +38,10 @@ const dadosInput = () => {
 
 const salvarLancamentos = () => {
     const objInput = dadosInput()
-    salvarRegistro(objInput, idEmEdicao)
-    limparFormulario()
+    const salvo = salvarRegistro(objInput, idEmEdicao)
+    if (salvo) {
+        limparFormulario()
+    }
 }
 
 const atualizarStorage = () => {
@@ -58,18 +60,24 @@ const limparFormulario = () => {
 
 
 const editRegistro = (id) => {
-    for (const item of lancamentos) {
-        if (item.id === id) {
-            idEmEdicao = id
-            document.getElementById("valor").value = item.valor
-            document.getElementById("descricao").value = item.descricao
-            document.getElementById("categoria").value = item.categoria
-            document.getElementById("tipo").value = item.tipo
-            document.getElementById("data").value = item.data
-            mostrarTela("editar")
-        }
+    const item = lancamentos.find(l => l.id === id)
+    if (item){
+        preencherFormulario(item)
+    } else {
+        alert("Erro ao editar formulário")
     }
 }
+
+const preencherFormulario = (obj) => {
+    idEmEdicao = obj.id
+    document.getElementById("valor").value = obj.valor
+    document.getElementById("descricao").value = obj.descricao
+    document.getElementById("categoria").value = obj.categoria
+    document.getElementById("tipo").value = obj.tipo
+    document.getElementById("data").value = obj.data
+    mostrarTela("editar")
+}
+
 
 
 
