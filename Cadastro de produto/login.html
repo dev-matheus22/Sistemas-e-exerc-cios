@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>LOGIN - PRODUCT MANAGER</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>Autenticação do usuário</h1>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" id="email" placeholder="user@email.com">
+      </div>
+
+      <div class="form-group">
+        <label>Senha:</label>
+        <input type="password" id="password" placeholder="********">
+      </div>
+
+      <button type="submit">LOGIN</button>
+    </form>
+
+    <p style="margin-top:10px;">
+      Novo usuário? <a href="cadastro.html" style="color:#ffff99;">Criar conta</a>
+    </p>
+  </div>
+
+  <script type="module" src="./dist/login.js"></script>
+</body>
+</html>
