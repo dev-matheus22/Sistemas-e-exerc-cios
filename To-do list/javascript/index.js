@@ -1,63 +1,154 @@
-import { auth } from "/firebase/firebaseConfig.js";
-import { addDoc, collection } from '/firebase/firebaseConfig.js'
+import { db } from "../firebase/firebaseConfig.js";
+import { addDoc, collection, Timestamp, doc, getDocs, getFirestore, query, where, updateDoc, deleteDoc }
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 
 let taskId = 0;
 let taskArray = [];
 let editGlobal = null;
 
-const addTask = () => {
+let search = document.getElementById("searchTask")
+search.addEventListener("input", (e) => {
+    let filteredTasks = []
+    for (const task of taskArray) {
+        if (task.texto.toLowerCase().includes(search.value.toLowerCase())) {
+            filteredTasks.push(task)
+        }
+    }
+    listTask(filteredTasks)
+})
+
+
+
+const verifyUser = async () => {
+    const user = Firebase.auth.currentUser
+    if (user !== null) {
+        return user.uid
+    } else {
+        alert("Faça login primeiro")
+        return
+    }
+}
+
+const addTask = async () => {
     let textTask = document.getElementById("textTask").value.trim();
+    const uid = await verifyUser()
+    const data = Timestamp.now()
+    if (textTask === "") {
+        alert("O campo de texto precisa ser preenchido")
+        return;
+    }
     if (editGlobal === null) {
-        if (textTask === "") {
-            alert("O campo de texto precisa ser preenchido")
-        } else {
-            const taskDate = new Date()
-            let objTask = {
+        try {
+            const docRef = await addDoc(collection(db, "tasks"), {
+                id: uid,
                 texto: textTask,
-                id: taskId,
-                date: taskDate
+                createdAt: data,
+                status: false
+            })
+            let objTask = {
+                id: docRef.id,
+                texto: textTask,
+                createdAt: data,
+                status: false
             }
-            taskId++
             taskArray.push(objTask)
-            listTask()
-            document.getElementById("textTask").value = ""
+        } catch (error) {
+            alert("Erro ao criar tarefa")
+            console.error(error)
         }
     } else {
-        let retorno = taskArray.find(t => t.id === editGlobal)
-        retorno.texto = textTask
+        try {
+            const taskRef = doc(db, "tasks", editGlobal);
+
+            await updateDoc(taskRef, {
+                texto: textTask,
+                updatedAt: Timestamp.now()
+            });
+            let i = taskArray.findIndex(t => t.id === editGlobal)
+            taskArray[i].texto = textTask
+            taskArray[i].updatedAt = Timestamp.now()
+            editGlobal = null;
+        } catch (error) {
+            alert("Erro ao salvar a edição de tarefa")
+            console.error(error)
+        }
         document.getElementById("textTask").value = ""
-        editGlobal = null;
         listTask()
     }
 }
 
-const removeTask = (e) => {
+const removeTask = async (e) => {
     e.target;
-    let removingTask = Number(e.target.dataset.delete);
-    let newTask = taskArray.filter(t => t.id !== removingTask)
-    taskArray = newTask;
+    let removingTask = e.target.dataset.delete;
+    const taskRef = doc(db, "tasks", removingTask)
+    try {
+        await deleteDoc(taskRef)
+    } catch (error) {
+        alert("Erro ao remover a tarefa")
+        console.error(error)
+    }
+    taskArray = taskArray.filter(t => t.id !== removingTask)
     listTask()
 }
 
 const updateTask = (e) => {
-    e.target;
-    let idClicado = Number(e.target.dataset.update);
-    let editTask = taskArray.find(rightTask => rightTask.id === idClicado)
+    let idClicado = e.target.dataset.update;
+    let editTask = taskArray.find(t => t.id === idClicado)
     editGlobal = idClicado
     document.getElementById("textTask").value = editTask.texto;
 }
 
+const fillArray = async (uid) => {
+    taskArray = []
+    try {
+        const q = query(
+            collection(db, "tasks"),
+            where("id", "==", uid)
+        )
+        const querySnp = await getDocs(q)
+        querySnp.forEach(doc => {
+            taskArray.push({ id: doc.id, ...doc.data() })
+        });
+    } catch (error) {
+        alert("Erro ao carregar dados")
+        console.error(error)
+    }
+}
 
-const listTask = () => {
+const listTask = (filteredTasks) => {
+    const tasksToRender = filteredTasks || taskArray;
     let taskList = document.getElementById("taskList");
+
     taskList.innerHTML = "";
 
-    for (const task of taskArray) {
+
+    for (const task of tasksToRender) {
+        let dateObj;
         let lista = document.createElement("li");
         let texto = document.createElement("span")
         let data = document.createElement("span");
         let btnExcluir = document.createElement("button");
         let btnEditar = document.createElement("button");
+        let checkbox = document.createElement("input")
+
+        checkbox.checked = task.status;
+
+        checkbox.type = "checkbox"
+
+        checkbox.addEventListener("change", async () => {
+            task.status = checkbox.checked;
+
+            try {
+                const taskRef = doc(db, "tasks", task.id);
+                await updateDoc(taskRef, { status: task.status });
+            } catch (error) {
+                alert("Erro ao atualizar status da tarefa");
+                console.error(error);
+            }
+            
+        });
+
 
         btnExcluir.innerText = "Exluir tarefa"
         btnEditar.innerText = "Editar tarefa"
@@ -74,9 +165,14 @@ const listTask = () => {
         btnExcluir.classList.add("btn-delete");
         btnEditar.classList.add("btn-edit");
 
-        const dia = task.date.getDate();
-        const mes = task.date.getMonth() + 1;
-        const ano = task.date.getFullYear();
+        if (task.updatedAt) {
+            dateObj = task.updatedAt.toDate();
+        } else {
+            dateObj = task.createdAt.toDate();
+        }
+        const dia = dateObj.getDate();
+        const mes = dateObj.getMonth() + 1;
+        const ano = dateObj.getFullYear();
         const dataCompleta = `${dia}/${mes}/${ano}`
 
         texto.innerText = task.texto;
@@ -86,6 +182,29 @@ const listTask = () => {
         lista.appendChild(data)
         lista.appendChild(btnExcluir)
         lista.appendChild(btnEditar)
+        lista.appendChild(checkbox)
         taskList.appendChild(lista)
     }
 }
+
+const logout = async () => {
+    try {
+        await Firebase.auth.signOut();
+        alert("Você saiu da conta");
+        taskArray = [];
+        document.getElementById("taskList").innerHTML = ""; 
+    } catch (error) {
+        console.error("Erro ao fazer logout:", error);
+        alert("Não foi possível sair da conta");
+    }
+};
+
+
+const startApp = async () => {
+    const uid = await verifyUser()
+    if (!uid) return;
+    await fillArray(uid)
+    listTask()
+}
+
+startApp()

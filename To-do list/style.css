@@ -54,13 +54,39 @@ input[type="text"], input[type="email"], input[type="password"] {
     border-radius: 12px;
     border: none;
     font-size: 1em;
-    width: 90%;
+    width: 98%;
     background: rgba(255, 255, 255, 0.2);
     color: #fff;
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
+}
+
+#searchTask {
+    width: 73%; /* ou 300px, dependendo do que ficar melhor */
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+    font-size: 1em;
+    margin-bottom: 20px; /* espaço entre o input e o resto */
+    transition: all 0.3s ease;
+}
+
+#searchTask:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.4);
+}
+
+
+::placeholder{
+    color:white
 }
 
 input:focus {
@@ -199,7 +225,7 @@ body {
     box-shadow: 0 0 0 3px rgba(255,255,255,0.4);
 }
 
-.menu button {
+.menu button, #btnSair {
     padding: 12px 20px;
     border-radius: 12px;
     border: none;
@@ -272,5 +298,26 @@ footer {
     color: #cce0ff;
     font-weight: 500;
 }
+
+.feedback {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.feedback.show {
+    opacity: 1;
+}
+
+
+
 
 

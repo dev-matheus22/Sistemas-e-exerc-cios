@@ -8,10 +8,13 @@
 </head>
 <body>
     <div class="header">
-        <a href="login.html">Login</a>
-        <a href="">Minhas tarefas</a>
-        <a href="">Adicionar tarefa</a>
+        <button>Sair</button>
+        <button>Minhas tarefas</button>
+        <button>Adicionar tarefa</button>
     </div>
+
+    <input type="text" id="searchTask" placeholder="Buscar tarefas..." />
+
 
     <div class="menu">
         <p>Quer adicionar tarefas?
@@ -20,13 +23,10 @@
         <button onclick="addTask()">Criar tarefa </button>
     </div>
 
-    <div class="textTask">
+    <div class="textTask"></div>
+    <div id="taskList"></div>
+    <div id="feedback" class="feedback"></div>
 
-    </div>
-
-    <div id="taskList">
-
-    </div>
 
     <footer>
     &copy; 2026 Gerenciador de Tarefas • Todos os direitos reservados
